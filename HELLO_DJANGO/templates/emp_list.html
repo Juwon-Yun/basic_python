@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EMP CRUD</title>
+<script src="../static/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+function setData(emp_id, emp_name,tel,address){
+// 	var obj_emp_id = document.getElementById("EMP_ID");
+// 	var obj_emp_name = document.getElementById("EMP_NAME");
+// 	var obj_tel = document.getElementById("TEL");
+// 	var obj_address = document.getElementById("ADDRESS");
+	
+// 	obj_emp_id.value = emp_id;
+// 	obj_emp_name.value = emp_name;
+// 	obj_tel.value = tel;
+// 	obj_address.value = address;
+	$("#EMP_ID").val(emp_id);
+	$("#EMP_NAME").val(emp_name);
+	$("#TEL").val(tel);
+	$("#ADDRESS").val(address);
+}
+
+function fn_insert(){
+	var emp_id 		= $("#EMP_ID").val();
+	var emp_name 	= $("#EMP_NAME").val();
+	var tel 		= $("#TEL").val();
+	var address 	= $("#ADDRESS").val();
+	
+	$.ajax({
+		type: 'POST',
+		url: 'insert.ajax',
+		data: {
+			'emp_id': emp_id,
+			'emp_name':emp_name,
+			'tel':tel,
+			'address':address
+		},  
+		dataType: 'json',
+		success: function(result){
+			console.log(result);
+			if(result.msg === 'ok'){
+				location.reload();
+			}else{
+				alert("데이터 추가 도중 문제가 생겼습니다.");
+			}
+		},
+		error: function(e) {
+			console.log('error:'+e.status);
+		}
+	});
+}
+function fn_update(){
+	var emp_id 		= $("#EMP_ID").val();
+	var emp_name 	= $("#EMP_NAME").val();
+	var tel 		= $("#TEL").val();
+	var address 	= $("#ADDRESS").val();
+	
+	$.ajax({
+		type: 'POST',
+		url: 'update.ajax',
+		data: {
+			'emp_id': emp_id,
+			'emp_name':emp_name,
+			'tel':tel,
+			'address':address
+		},  
+		dataType: 'json',
+		success: function(result){
+			console.log(result);
+			if(result.msg === 'ok'){
+				location.reload();
+			}else{
+				alert("데이터 수정 도중 문제가 생겼습니다.");
+			}
+		},
+		error: function(e) {
+			console.log('error:'+e.status);
+		}
+	});
+}
+
+function fn_delete(){
+	var flag = confirm("한번 삭제된 데이터는 복구 불가합니다 진행하시겠습니까?");
+	
+	if(!flag){
+		console.log(flag);
+		return;
+	}
+	
+	var emp_id 		= $("#EMP_ID").val();
+	
+	$.ajax({
+		type: 'POST',
+		url: 'delete.ajax',
+		data: {
+			'emp_id': emp_id
+		},  
+		dataType: 'json',
+		success: function(result){
+			console.log(result);
+			if(result.msg === 'ok'){
+				location.reload();
+			}else{
+				alert("데이터 삭제 도중 문제가 생겼습니다.");
+			}
+		},
+		error: function(e) {
+			console.log('error:'+e.status);
+		}
+	});
+}
+</script>
+</head>
+<body>
+
+<table border="1">
+	<tr>
+		<td>사번</td>
+		<td>이름</td>
+		<td>전화번호</td>
+		<td>주소</td>
+	</tr>
+{% for i in list %}
+	<tr>
+		<td><a href="javascript:setData('{{i.EMP_ID}}','{{i.EMP_NAME}}','{{i.TEL}}','{{i.ADDRESS}}')">{{i.EMP_ID}}</a></td>
+		<td>{{i.EMP_NAME}}</td>
+		<td>{{i.TEL}}</td>
+		<td>{{i.ADDRESS}}</td>
+	</tr>
+{% endfor %}
+</table>
+
+<div id="showInfo">
+<table border="1" style="">
+	<tr>
+		<td>사번</td>
+		<td><input type="text" id="EMP_ID" size="10"></td>
+	</tr>
+	<tr>
+		<td>이름</td>
+		<td><input type="text" id="EMP_NAME" size="10"></td>
+	</tr>
+	<tr>
+		<td>전화번호</td>
+		<td><input type="text" id="TEL" size="10"></td>
+	</tr>
+	<tr>
+		<td>주소</td>
+		<td><input type="text" id="ADDRESS" size="10"></td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: center;">
+			<input type="button" id="insert" value="추가" onclick="fn_insert();">
+			<input type="button" id="update" value="수정" onclick="fn_update();">
+			<input type="button" id="delete" value="삭제" onclick="fn_delete();">
+		</td>
+	</tr>
+</table>
+</div>
+
+</body>
+</html>
